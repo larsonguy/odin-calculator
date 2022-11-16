@@ -28,7 +28,7 @@ function operate(num1, operator, num2) {
 
 let inputOne = 2
 let inputTwo = 10
-let userOperator = prompt('select an operator', '')
+let userOperator = '+'
 
 let finalResult = operate(inputOne,userOperator,inputTwo);
 

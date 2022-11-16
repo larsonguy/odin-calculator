@@ -1,0 +1,9 @@
+.calculator {
+    border: solid 1px;
+    background-color: black;
+    width: 400px;
+    height: 600px;
+    border-radius: 3%;
+    display: flex;
+    flex-direction: row;
+}
