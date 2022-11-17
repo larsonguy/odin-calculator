@@ -26,6 +26,16 @@ function operate(num1, operator, num2) {
     }
 }
 
+function displayNumbers (buttonClicked) {
+    let displayText = displayText + buttonClicked;
+}
+let displayText = ''
+document.querySelector('.display').textContent = displayText;
+
+document.querySelectorAll('.number-button').forEach(item => 
+    item.addEventListener('click', event => displayNumbers(item.textContent)))
+
+
 let inputOne = 2
 let inputTwo = 10
 let userOperator = '+'
