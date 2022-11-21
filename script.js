@@ -1,46 +1,144 @@
-function add(num1, num2) {
-    return (num1 + num2);
+let displayValue = '0';
+let firstOperand = null;
+let secondOperand = null;
+let firstOperator = null;
+let secondOperator = null;
+let result = null;
+const buttons = document.querySelectorAll('button');
+
+function updateDisplay() {
+    const display = document.getElementById('display');
+    display.innerText = displayValue;
+    if(displayValue.length > 9) {
+        display.innerText = displayValue.substring(0, 9);
+    }
+}
+updateDisplay();
+
+
+function clickButton() {
+    for(let i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function() {
+            if(buttons[i].classList.contains('operand')) {
+                inputOperand(buttons[i].value);
+                updateDisplay();
+            } else if(buttons[i].classList.contains('operator')) {
+                inputOperator(buttons[i].value);
+            } else if(buttons[i].classList.contains('equals')) {
+                inputEquals();
+                updateDisplay();
+            } else if(buttons[i].classList.contains('decimal')) {
+                inputDecimal(buttons[i].value);
+                updateDisplay();
+            } else if(buttons[i].classList.contains('percent')) {
+                inputPercent(displayValue);
+                updateDisplay();
+            } else if(buttons[i].classList.contains('sign')) {
+                inputSign(displayValue);
+                updateDisplay();
+            } else if(buttons[i].classList.contains('clear'))
+                clearDisplay();
+                updateDisplay();
+        }
+    )}
 }
 
-function subtract(num1, num2) {
-    return (num1 - num2);
-}
+clickButton();
 
-function multiply(num1, num2) {
-    return (num1 * num2);
-}
-
-function divide(num1, num2) {
-    return (num1 / num2);
-}
-
-function operate(num1, operator, num2) {
-    if (operator === '+') {
-        return add(num1, num2);
-    } else if (operator === '-') {
-        return subtract(num1, num2);
-    } else if (operator === '*') {
-        return multiply(num1, num2);
-    } else if (operator === '/') {
-        return divide(num1, num2);
+function inputOperand(operand) {
+    if(firstOperator === null) {
+        if(displayValue === '0' || displayValue === 0) {
+            //1st click - handles first operand input
+            displayValue = operand;
+        } else if(displayValue === firstOperand) {
+            //starts new operation after inputEquals()
+            displayValue = operand;
+        } else {
+            displayValue += operand;
+        }
+    } else {
+        //3rd/5th click - inputs to secondOperand
+        if(displayValue === firstOperand) {
+            displayValue = operand;
+        } else {
+            displayValue += operand;
+        }
     }
 }
 
-function displayNumbers (buttonClicked) {
-    let displayText = displayText + buttonClicked;
+function inputOperator(operator) {
+    if (firstOperator != null && secondOperator === null) {
+        secondOperator = operator;
+        secondOperand = displayValue;
+        result = operate(Number(firstOperand), Number(secondOperand), firstOperator);
+        displayValue = roundAccurately(result, 15).toString();
+        result = null;
+    } else if (firstOperator != null && secondOperator != null) {
+        // other clicks (i.e., new secondOperators and beyond)
+        secondOperand = displayValue;
+        result = operate(Number(firstOperand), Number(secondOperand), secondOperator);
+        secondOperator = operator;
+        displayValue = roundAccurately(result, 15).toString();
+        firstOperand = displayValue;
+        result = null;
+    } else {
+        firstOperator = operator;
+        firstOperand = displayValue;
+    }
 }
-let displayText = ''
-document.querySelector('.display').textContent = displayText;
 
-document.querySelectorAll('.number-button').forEach(item => 
-    item.addEventListener('click', event => displayNumbers(item.textContent)))
+function inputEquals() {
+    //hitting equals doesn't display undefined before operate()
+    if(firstOperator === null) {
+        displayValue = displayValue;
+    } else if(secondOperator != null) {
+        //handles final result
+        secondOperand = displayValue;
+        result = operate(Number(firstOperand), Number(secondOperand), secondOperator);
+        if(result === 'lmao') {
+            displayValue = 'lmao';
+        } else {
+            displayValue = roundAccurately(result, 15).toString();
+            firstOperand = displayValue;
+            secondOperand = null;
+            firstOperator = null;
+            secondOperator = null;
+            result = null;
+        }
+    } else {
+        //handles first operation
+        secondOperand = displayValue;
+        result = operate(Number(firstOperand), Number(secondOperand), firstOperator);
+        if(result === 'lmao') {
+            displayValue = 'lmao';
+        } else {
+            displayValue = roundAccurately(result, 15).toString();
+            firstOperand = displayValue;
+            secondOperand = null;
+            firstOperator = null;
+            secondOperator = null;
+            result = null;
+        }
+    }
+}
 
+function operate(x, y, op) {
+    if(op === '+') {
+        return x + y;
+    } else if(op === '-') {
+        return x - y;
+    } else if(op === '*') {
+        return x * y;
+    } else if(op === '/') {
+        if(y === 0) {
+            return 'lmao';
+        } else {
+        return x / y;
+        }
+    }
+}
 
-let inputOne = 2
-let inputTwo = 10
-let userOperator = '+'
-
-let finalResult = operate(inputOne,userOperator,inputTwo);
-
-console.log(finalResult)
+function roundAccurately(num, places) {
+    return parseFloat(Math.round(num + 'e' + places) + 'e-' + places);
+}
 
