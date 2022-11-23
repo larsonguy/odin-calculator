@@ -36,9 +36,10 @@ function clickButton() {
             } else if(buttons[i].classList.contains('sign')) {
                 inputSign(displayValue);
                 updateDisplay();
-            } else if(buttons[i].classList.contains('clear'))
+            } else if(buttons[i].classList.contains('clear')) 
                 clearDisplay();
-                updateDisplay();
+                updateDisplay(); 
+            
         }
     )}
 }
@@ -72,6 +73,7 @@ function inputOperator(operator) {
         secondOperand = displayValue;
         result = operate(Number(firstOperand), Number(secondOperand), firstOperator);
         displayValue = roundAccurately(result, 15).toString();
+        firstOperand = displayValue;
         result = null;
     } else if (firstOperator != null && secondOperator != null) {
         // other clicks (i.e., new secondOperators and beyond)
@@ -142,3 +144,29 @@ function roundAccurately(num, places) {
     return parseFloat(Math.round(num + 'e' + places) + 'e-' + places);
 }
 
+function clearDisplay() {
+    displayValue = '0';
+    firstOperand = null;
+    secondOperand = null;
+    firstOperator = null;
+    secondOperator = null;
+    result = null;
+    updateDisplay();
+}
+
+function inputDecimal (decimal) {
+    if (Number(displayValue) % 1 != 0){
+        return displayValue;
+    } else {
+        displayValue += decimal;
+    }
+
+}
+
+function inputPercent(num) {
+    displayValue = (num/100).toString();
+}
+
+function inputSign(num) {
+    displayValue = (num * -1).toString();
+}

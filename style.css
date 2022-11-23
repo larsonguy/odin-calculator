@@ -70,7 +70,7 @@ button {
 }
 
 .operand {
-    background-color: #217C7E;
+    background-color: #95c1c8;
 }
 
 .operand:active {
@@ -78,7 +78,7 @@ button {
 }
 
 .decimal {
-    background-color: #217C7E;
+    background-color: #95c1c8;
 }
 
 .decimal:active {
